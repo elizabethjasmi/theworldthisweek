@@ -1,44 +1,26 @@
-import API, { graphqlOperation } from '@aws-amplify/api'
-import PubSub from '@aws-amplify/pubsub';
-import { createTodo } from './graphql/mutations'
-import { onCreateTodo } from './graphql/subscriptions'
-import { listTodos } from './graphql/queries'
-import awsconfig from './aws-exports';
-API.configure(awsconfig);
-PubSub.configure(awsconfig);
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
 
-async function getData() {
-  QueryResult.innerHTML = `QUERY RESULTS`;
-  API.graphql(graphqlOperation(listTodos)).then((evt) => {
-    evt.data.listTodos.items.map((todo, i) =>
-    QueryResult.innerHTML += `<p>${todo.name} - ${todo.description}</p>`
-    );
-  })
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
+  );
 }
 
-getData();
-
-async function createNewTodo() {
-  const todo = { name: "Use AppSync" , description: "Realtime and Offline"}
-  return await API.graphql(graphqlOperation(createTodo, { input: todo }))
-}
-
-const MutationButton = document.getElementById('MutationEventButton');
-const MutationResult = document.getElementById('MutationResult');
-
-MutationButton.addEventListener('click', (evt) => {
-  MutationResult.innerHTML = `MUTATION RESULTS:`;
-  createNewTodo().then( (evt) => {
-    MutationResult.innerHTML += `<p>${evt.data.createTodo.name} - ${evt.data.createTodo.description}</p>`
-  })
-});
-
-const SubscriptionResult = document.getElementById('SubscriptionResult');
-
-API.graphql(graphqlOperation(onCreateTodo)).subscribe({
-  next: (evt) =>{
-    SubscriptionResult.innerHTML = `SUBSCRIPTION RESULTS`
-    const todo = evt.value.data.onCreateTodo;
-    SubscriptionResult.innerHTML += `<p>${todo.name} - ${todo.description}</p>`
-  }
-});
+export default App;
